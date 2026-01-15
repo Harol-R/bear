@@ -1,0 +1,20 @@
+//crea variables
+VAR a 6
+VAR b 9
+
+//crea un contenedor con el nombre "Result" y valor 0
+VAR RESULT 0
+
+//anade variables a y b y daselo a "result"
+ADD a b RESULT
+
+//imprime el resultado
+PRINTLN RESULT
+
+//anade
+ADD 1 1 RESULT
+
+//imprime
+PRINT RESULT
+
+PRINT a
