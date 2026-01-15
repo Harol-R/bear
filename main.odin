@@ -4,6 +4,7 @@ import "core:fmt"
 import "core:os"
 import "core:strings"
 import "core:strconv"
+import color "lib"
 
 //variable data type def
 variable :: struct{
@@ -18,9 +19,13 @@ stack:[dynamic]variable
 main :: proc() {
     lines:= parse_line("main.bear")
 
-    res:any
+    line:int = 1
     for i in lines{
-        words:= strings.split(i," ")
+        //words:= strings.split(i, " ")
+        words:= strings.fields(i)
+        if len(words) == 0 {
+            continue
+        }
 
         if words[0] == "VAR"{
             if len(words) >= 2{
@@ -35,10 +40,7 @@ main :: proc() {
         }
 
         if words[0] == "ADD"{
-            if len(words) >= 2{
-                a,err:= strconv.parse_f32(words[1])
-                b,err_:= strconv.parse_f32(words[2])
-
+            if len(words) == 4{
                 c:= words[1]
                 d:= words[2]
                 e:= words[3]
@@ -64,6 +66,8 @@ main :: proc() {
                         //res = a + b
                         for &i in stack{
                             if i.name == e{
+                                a,err:= strconv.parse_f32(words[1])
+                                b,err_:= strconv.parse_f32(words[2])
                                 i.value = a+b
                             }
                         }
@@ -71,11 +75,13 @@ main :: proc() {
                 }
 
                 
+            } else{
+                fmt.println(color.red("NOT ENOUGHT ARGUMENTS"))
             }
         }
 
         if words[0] == "PRINT"{
-            if len(words) >= 1{
+            if len(words) >= 2{
                 for i in stack{
                     if i.name == words[1]{
                         fmt.print(i.value)
@@ -85,26 +91,41 @@ main :: proc() {
         }
 
         if words[0] == "PRINTLN"{
-            if len(words) >= 1{
+            found:bool
+            if len(words) >= 2{
                 for i in stack{
                     if i.name == words[1]{
+                        found = true
                         fmt.println(i.value)
                     }
                 }
+            }
+
+            if found == false{
+                fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
+                fmt.println(line)
             }
         }
 
         if words[0] == "SET"{
             a,err:= strconv.parse_f32(words[2])
+            found:bool
             if len(words) >= 2{
                 for &i in stack{
                     if i.name == words[1]{
+                        found = true
                         i.value = a
                     }
+                }
+
+                if found == false {
+                    fmt.print(color.red("SET VALUE: VARIABLE NOT FOUND LINE: "))
+                    fmt.println(line)
                 }
             }
         }
 
+        line += 1
         
 
 
