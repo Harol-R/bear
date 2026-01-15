@@ -1,20 +1,7 @@
-//crea variables
-VAR a 6
-VAR b 9
+VAR P 8
 
-//crea un contenedor con el nombre "Result" y valor 0
-VAR RESULT 0
+SET P 2
 
-//anade variables a y b y daselo a "result"
-ADD a b RESULT
+ADD 4 4 P
 
-//imprime el resultado
-PRINTLN RESULT
-
-//anade
-ADD 1 1 RESULT
-
-//imprime
-PRINT RESULT
-
-PRINT a
+PRINTLN P

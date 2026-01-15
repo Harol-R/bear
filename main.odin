@@ -94,6 +94,19 @@ main :: proc() {
             }
         }
 
+        if words[0] == "SET"{
+            a,err:= strconv.parse_f32(words[2])
+            if len(words) >= 2{
+                for &i in stack{
+                    if i.name == words[1]{
+                        i.value = a
+                    }
+                }
+            }
+        }
+
+        
+
 
     }
     delete(stack)
