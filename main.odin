@@ -5,11 +5,11 @@ import "core:os"
 import "core:strings"
 import "core:strconv"
 import color "lib"
+import "core:time"
 
 //variable data type def
 variable :: struct{
     name:string,
-    type_:string,
     value:f32
 }
 
@@ -17,30 +17,50 @@ variable :: struct{
 stack:[dynamic]variable
 
 main :: proc() {
-    lines:= parse_line("main.bear")
+    Interpreter("main.bear")
+}
+
+Interpreter :: proc(path:string) {
+    lines:= parse_line(path)
 
     line:int = 1
     for i in lines{
         //words:= strings.split(i, " ")
         words:= strings.fields(i)
         if len(words) == 0 {
+            line += 1
             continue
         }
 
         if words[0] == "VAR"{
-            if len(words) >= 2{
+            if len(words) == 3{
                 //only f32 vars for now
                 v,err := strconv.parse_f32(words[2])
+                
                 var:variable
                 var.name = words[1]
                 var.value =  v
+
+                if err == false{
+                    fmt.print(color.red("COULDNT CREATE VARIABLE NAMED "))
+                    fmt.print(var.name)
+                    fmt.println(color.red(" INCORRECT VALUE"))
+                    return
+                }
+
                 append(&stack,var)
+                
                 fmt.println(var)
+            
+            }else { // error handle
+                fmt.print(color.red("MORE OR LESS THAN 2 ARGUMENTS on Line: "))
+                fmt.println(line)
             }
         }
 
         if words[0] == "ADD"{
             if len(words) == 4{
+                
                 c:= words[1]
                 d:= words[2]
                 e:= words[3]
@@ -48,7 +68,9 @@ main :: proc() {
                 
                 for i in stack{
                     if i.name == c {
+                        
                         for p in stack {
+                            
                             if p.name == d{
                                 //fmt.println(i.value + p.value)
                                 //res = i.value + p.value
@@ -76,23 +98,31 @@ main :: proc() {
 
                 
             } else{
-                fmt.println(color.red("NOT ENOUGHT ARGUMENTS"))
+                fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
+                fmt.println(line)
             }
         }
 
         if words[0] == "PRINT"{
-            if len(words) >= 2{
+            found:bool
+            if len(words) == 2{
                 for i in stack{
                     if i.name == words[1]{
+                        found = true
                         fmt.print(i.value)
                     }
                 }
+            }
+
+            if found == false{
+                fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
+                fmt.println(line)
             }
         }
 
         if words[0] == "PRINTLN"{
             found:bool
-            if len(words) >= 2{
+            if len(words) == 2{
                 for i in stack{
                     if i.name == words[1]{
                         found = true
@@ -122,6 +152,15 @@ main :: proc() {
                     fmt.print(color.red("SET VALUE: VARIABLE NOT FOUND LINE: "))
                     fmt.println(line)
                 }
+            }
+        }
+
+        if words[0] == "WAIT"{
+            if len(words) == 1{
+                time.sleep(time.Second)
+            } else{
+                fmt.print(color.red("NOT ARGUMENTS NEEDED ON LINE: "))
+                fmt.println(line)
             }
         }
 
