@@ -1,4 +1,6 @@
-VAR a 2
-VAR b 2
+VAR a 6
+VAR b 3
 
-IF a == b
+DIV a b a
+
+PRINTLN a

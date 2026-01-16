@@ -23,12 +23,11 @@ main :: proc() {
 Interpreter :: proc(path:string) {
     lines:= parse_line(path)
 
-    line:int = 1
-    for i in lines{
+    //for i in lines
+    for i:= 0; i < len(lines); i += 1{
         //words:= strings.split(i, " ")
-        words:= strings.fields(i)
+        words:= strings.fields(lines[i])
         if len(words) == 0 {
-            line += 1
             continue
         }
 
@@ -54,7 +53,7 @@ Interpreter :: proc(path:string) {
             
             }else { // error handle
                 fmt.print(color.red("MORE OR LESS THAN 2 ARGUMENTS on Line: "))
-                fmt.println(line)
+                fmt.println(i + 1)
                 return
             }
         }
@@ -100,7 +99,145 @@ Interpreter :: proc(path:string) {
                 
             } else{
                 fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
-                fmt.println(line)
+                fmt.println(i + 1)
+                return
+            }
+        }
+
+        if words[0] == "SUB"{
+            if len(words) == 4{
+                
+                c:= words[1]
+                d:= words[2]
+                e:= words[3]
+                found:bool
+                
+                for i in stack{
+                    if i.name == c {
+                        
+                        for p in stack {
+                            
+                            if p.name == d{
+                                //fmt.println(i.value + p.value)
+                                //res = i.value + p.value
+                                for &n in stack{
+                                    if n.name == e{
+                                        found = true
+                                        n.value = i.value - p.value
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if found == false{
+                        //res = a + b
+                        for &i in stack{
+                            if i.name == e{
+                                a,err:= strconv.parse_f32(words[1])
+                                b,err_:= strconv.parse_f32(words[2])
+                                i.value = a-b
+                            }
+                        }
+                    }
+                }
+
+                
+            } else{
+                fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
+                fmt.println(i + 1)
+                return
+            }
+        }
+
+        if words[0] == "MUL"{
+            if len(words) == 4{
+                
+                c:= words[1]
+                d:= words[2]
+                e:= words[3]
+                found:bool
+                
+                for i in stack{
+                    if i.name == c {
+                        
+                        for p in stack {
+                            
+                            if p.name == d{
+                                //fmt.println(i.value + p.value)
+                                //res = i.value + p.value
+                                for &n in stack{
+                                    if n.name == e{
+                                        found = true
+                                        n.value = i.value * p.value
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if found == false{
+                        //res = a + b
+                        for &i in stack{
+                            if i.name == e{
+                                a,err:= strconv.parse_f32(words[1])
+                                b,err_:= strconv.parse_f32(words[2])
+                                i.value = a*b
+                            }
+                        }
+                    }
+                }
+
+                
+            } else{
+                fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
+                fmt.println(i + 1)
+                return
+            }
+        }
+
+        if words[0] == "DIV"{
+            if len(words) == 4{
+                
+                c:= words[1]
+                d:= words[2]
+                e:= words[3]
+                found:bool
+                
+                for i in stack{
+                    if i.name == c {
+                        
+                        for p in stack {
+                            
+                            if p.name == d{
+                                //fmt.println(i.value + p.value)
+                                //res = i.value + p.value
+                                for &n in stack{
+                                    if n.name == e{
+                                        found = true
+                                        n.value = i.value / p.value
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if found == false{
+                        //res = a + b
+                        for &i in stack{
+                            if i.name == e{
+                                a,err:= strconv.parse_f32(words[1])
+                                b,err_:= strconv.parse_f32(words[2])
+                                i.value = a/b
+                            }
+                        }
+                    }
+                }
+
+                
+            } else{
+                fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
+                fmt.println(i + 1)
                 return
             }
         }
@@ -124,7 +261,7 @@ Interpreter :: proc(path:string) {
                     fmt.print(w)
                 } else{
                     fmt.print(color.red("VARIABLE or INPUT COULD NOT BE FOUND LINE: "))
-                    fmt.println(line)
+                    fmt.println(i + 1)
                     return
                 }
                 
@@ -150,7 +287,7 @@ Interpreter :: proc(path:string) {
                     fmt.println(w)
                 } else{
                     fmt.print(color.red("VARIABLE or INPUT COULD NOT BE FOUND LINE: "))
-                    fmt.println(line)
+                    fmt.println(i + 1)
                     return
                 }
                 
@@ -160,17 +297,26 @@ Interpreter :: proc(path:string) {
         if words[0] == "SET"{
             a,err:= strconv.parse_f32(words[2])
             found:bool
-            if len(words) >= 2{
+            if len(words) == 3{
                 for &i in stack{
+                    // if i.name == words[1]{
+                    //     found = true
+                    //     i.value = a
+                    // }
                     if i.name == words[1]{
-                        found = true
-                        i.value = a
+                        for p in stack{
+                            if p.name == words[2]{
+                                found = true
+                                i.value = p.value
+                            }
+                        }
                     }
+
                 }
 
                 if found == false {
                     fmt.print(color.red("SET VALUE: VARIABLE NOT FOUND LINE: "))
-                    fmt.println(line)
+                    fmt.println(i + 1)
                 }
             }
         }
@@ -180,7 +326,7 @@ Interpreter :: proc(path:string) {
                 time.sleep(time.Second)
             } else{
                 fmt.print(color.red("NOT ARGUMENTS NEEDED ON LINE: "))
-                fmt.println(line)
+                fmt.println(i + 1)
             }
         }
 
@@ -212,6 +358,18 @@ Interpreter :: proc(path:string) {
                                     cond_true = i.value == p.value
                                     fmt.println(color.green("IF STATEMENT IS "),cond_true)
                                 }
+                                if operator == ">"{
+                                    cond_true = bool(i.value > p.value)
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
+                                if operator == "<"{
+                                    cond_true = bool(i.value < p.value)
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
+                                if operator == "!="{
+                                    cond_true = bool(i.value != p.value)
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
                             }
                         }
                     }
@@ -220,17 +378,45 @@ Interpreter :: proc(path:string) {
                 if found == false{
                     val1,err:= strconv.parse_f32(words[1])
                     val2,err_:= strconv.parse_f32(words[3])
+                    
+                    
                     if operator == "=="{
                         cond_true = val1 == val2
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
                     }
+                    if operator == ">"{
+                        cond_true = bool(val1 > val2)
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                    }
+                    if operator == "<"{
+                        cond_true = bool(val1 < val2)
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                    }
+                    if operator == "!="{
+                        cond_true = bool(val1 != val2)
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                    }
+                }
+
+                //if "IF" is not true skip line
+                if cond_true ==  false{
+                    i += 1
                 }
             }
         }
 
-        line += 1
-        
-
-
+        if words[0] == "JMP"{
+            if len(words) == 2{
+                l,err:= strconv.parse_f32(words[1])
+                i = int(l - 1 )
+                fmt.println(color.white("MOVED TO LINE: "), l)
+                continue
+            }else { // error handle
+                fmt.print(color.red("MORE OR LESS THAN one ARGUMENTS on Line: "))
+                fmt.println(i + 1)
+                return
+            }
+        }        
 
     }
     delete(stack)
