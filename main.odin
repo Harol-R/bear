@@ -55,6 +55,7 @@ Interpreter :: proc(path:string) {
             }else { // error handle
                 fmt.print(color.red("MORE OR LESS THAN 2 ARGUMENTS on Line: "))
                 fmt.println(line)
+                return
             }
         }
 
@@ -193,10 +194,42 @@ Interpreter :: proc(path:string) {
             } 
         }
 
-        
+        if words[0] == "IF"{
+            if len(words) == 4{
+
+                a:= words[1]
+                operator:= words[2]
+                b:= words[3]
+
+                cond_true:bool = false
+                found:bool = false
+                for i in stack{
+                    if i.name == a{
+                        for p in stack{
+                            if p.name == b{
+                                found = true
+                                if operator == "=="{
+                                    cond_true = i.value == p.value
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if found == false{
+                    val1,err:= strconv.parse_f32(words[1])
+                    val2,err_:= strconv.parse_f32(words[3])
+                    if operator == "=="{
+                        cond_true = val1 == val2
+                    }
+                }
+            }
+        }
 
         line += 1
         
+
 
 
     }
