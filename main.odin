@@ -100,6 +100,7 @@ Interpreter :: proc(path:string) {
             } else{
                 fmt.print(color.red("MORE OR LESS THAN 3 ARGUMENTS on Line: "))
                 fmt.println(line)
+                return
             }
         }
 
@@ -115,8 +116,17 @@ Interpreter :: proc(path:string) {
             }
 
             if found == false{
-                fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
-                fmt.println(line)
+                // fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
+                // fmt.println(line)
+                if len(words) > 1 {
+                    w,err:= strings.replace(words[1],"_", " ",-1)
+                    fmt.print(w)
+                } else{
+                    fmt.print(color.red("VARIABLE or INPUT COULD NOT BE FOUND LINE: "))
+                    fmt.println(line)
+                    return
+                }
+                
             }
         }
 
@@ -132,8 +142,17 @@ Interpreter :: proc(path:string) {
             }
 
             if found == false{
-                fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
-                fmt.println(line)
+                // fmt.print(color.red("VARIABLE COULD NOT BE FOUND LINE: "))
+                // fmt.println(line)
+                if len(words) > 1{
+                    w,err:= strings.replace(words[1],"_", " ",-1)
+                    fmt.println(w)
+                } else{
+                    fmt.print(color.red("VARIABLE or INPUT COULD NOT BE FOUND LINE: "))
+                    fmt.println(line)
+                    return
+                }
+                
             }
         }
 
@@ -163,6 +182,18 @@ Interpreter :: proc(path:string) {
                 fmt.println(line)
             }
         }
+
+        if words[0] == "FREE"{
+            if len(words) == 2{
+                for i,idx in stack{
+                    if i.name == words[1]{
+                        unordered_remove(&stack,idx)
+                    }
+                }
+            } 
+        }
+
+        
 
         line += 1
         
