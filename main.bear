@@ -1,6 +1,7 @@
-VAR a 6
+VAR a 12
 VAR b 3
+VAR result 0
 
-DIV a b a
+GETKEY result
 
-PRINTLN a
+PRINTLN result

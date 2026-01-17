@@ -370,6 +370,14 @@ Interpreter :: proc(path:string) {
                                     cond_true = bool(i.value != p.value)
                                     fmt.println(color.green("IF STATEMENT IS "),cond_true)
                                 }
+                                if operator == "<="{
+                                    cond_true = bool(i.value <= p.value)
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
+                                if operator == ">="{
+                                    cond_true = bool(i.value >= p.value)
+                                    fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                                }
                             }
                         }
                     }
@@ -396,11 +404,35 @@ Interpreter :: proc(path:string) {
                         cond_true = bool(val1 != val2)
                         fmt.println(color.green("IF STATEMENT IS "),cond_true)
                     }
+                    if operator == ">="{
+                        cond_true = bool(val1 >= val2)
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                    }
+                    if operator == "<="{
+                        cond_true = bool(val1 <= val2)
+                        fmt.println(color.green("IF STATEMENT IS "),cond_true)
+                    }
                 }
 
                 //if "IF" is not true skip line
                 if cond_true ==  false{
                     i += 1
+                }
+            }
+        }
+
+        if words[0] == "GETKEY"{
+            if len(words) >= 2{
+                for &i in stack{
+                    if i.name == words[1]{
+                        
+                        buf:[1]u8
+                        n, _ := os.read(os.stdin,buf[:])
+                        input:= string(buf[:n])
+                        i.value = f32(buf[0])
+
+
+                    }
                 }
             }
         }
